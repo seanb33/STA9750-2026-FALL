@@ -1,0 +1,18 @@
+---
+title: "Sean Bosch"
+---
+
+Hi! I'm Sean Bosch, a graduate student in the MS in AI and Business Analytics program at Baruch College's Zicklin School of Business, concentrating in data analytics.
+
+Before Baruch, I earned a BA in History from the College of Staten Island (CUNY). I'm interested in bringing data analytics to cultural institutions, museums, and New York City agencies, where history and data meet.
+
+This site hosts my work for STA 9750: Software Tools for Data Analysis.
+
+```{r}
+#| include: false
+1+1
+```
+
+--------------
+
+Last Updated: `r format(Sys.time(), "%A %m %d, %Y at %H:%M%p")`
