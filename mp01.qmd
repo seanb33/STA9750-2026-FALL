@@ -30,13 +30,12 @@ library(skimr)
 
 # Introduction
 
-**TODO (write yourself):** 1–2 paragraphs. What the WWW reports are, why
-Netflix started publishing them, and what this report will look at.
+Netflix’s What We Watched reports come out twice a year and list almost every title watched on Netflix in a six-month period, along with its hours viewed and, starting in 2024, its views. Netflix started publishing them in December 2023, after years of criticism for keeping its viewing numbers secret, including pressure from writers and actors during the 2023 strikes. This report uses the data from 2023H1 to 2026H1 to look at top titles, catalog size, staple titles, TV vs. movies, and live events. It ends with a strategy memo for Netflix’s 2027 original content.
 
 # Data Acquisition and Preparation
 
-**TODO (write yourself):** one or two sentences on where the data comes from.
 
+The data comes from Netflix’s What We Watched engagement reports, which Netflix posts as Excel files on its website, one for each six-month period from 2023H1 to 2026H1. I loaded them using the function provided by the instructor, with a few changes to clean up column names and fix the year and period labels.
 ```{r}
 #| label: load-data
 #' Acquire Netflix What We Watched Reports
@@ -58,7 +57,7 @@ load_netflix_data <- function() {
 
   NETFLIX_URLS <- list(
     `2023H1` = "https://about.netflix.com/news/what-we-watched-a-netflix-engagement-report",
-    `2023H2` = "https://about.netflix.com/news/what-we-watched-the-second-half-of-2023",
+    # `2023H2` = "https://about.netflix.com/news/what-we-watched-the-second-half-of-2023",
     `2024H1` = "https://about.netflix.com/news/what-we-watched-the-first-half-of-2024",
     `2024H2` = "https://about.netflix.com/news/what-we-watched-the-second-half-of-2024",
     `2025H1` = "https://about.netflix.com/news/what-we-watched-the-first-half-of-2025",
@@ -266,7 +265,7 @@ NETFLIX_DATA |>
   tab_source_note(NETFLIX_SOURCE)
 ```
 
- (Squid Game: Season 2 is the only title that tops two periods in a row (2024H2 and 2025H1), likely because it came out at the very end of December 2024 and kept drawing viewers into the next year. Even so, no single title takes a big slice of watch time: the top title’s share stays between about 0.7% and 1.0% in every period, with Wednesday: Season 2 the highest at 1.00%. This suggests Netflix doesn’t depend on any one hit, since most of its viewing comes from the large mix of titles below the top spot.):** what stands out?
+ Squid Game: Season 2 is the only title that tops two periods in a row (2024H2 and 2025H1), likely because it came out at the very end of December 2024 and kept drawing viewers into the next year. Even so, no single title takes a big slice of watch time: the top title’s share stays between about 0.7% and 1.0% in every period, with Wednesday: Season 2 the highest at 1.00%. This suggests Netflix doesn’t depend on any one hit, since most of its viewing comes from the large mix of titles below the top spot.
 
 ### 2. Catalog size over time
 
@@ -323,8 +322,7 @@ NETFLIX_DATA |>
   tab_footnote("Coefficient of variation = standard deviation / mean.") |>
   tab_source_note(NETFLIX_SOURCE)
 ```
- (I kept only titles that appeared in every period from 2023H1 to 2026H1, then ranked them by their lowest period, so a title only ranks high if it never had a bad half-year. The coefficient of variation (CV) shows how much viewing goes up and down compared to the average, so a lower number means steadier viewing. Most of the list is licensed shows and older seasons like Breaking Bad, Suits and Chiquititas, which people keep watching ever period. Stranger Things 4 is the exception: its CV of 0.83 shows big swings, and it only made the list because even its worst period was high.):** explain the filter you chose and what the list
-says.
+  I kept only titles that appeared in every period from 2023H1 to 2026H1, then ranked them by their lowest period, so a title only ranks high if it never had a bad half-year. The coefficient of variation (CV) shows how much viewing goes up and down compared to the average, so a lower number means steadier viewing. Most of the list is licensed shows and older seasons like Breaking Bad, Suits and Chiquititas, which people keep watching ever period. Stranger Things 4 is the exception: its CV of 0.83 shows big swings, and it only made the list because even its worst period was high.
 
 ### 4. TV shows vs. movies
 
@@ -466,8 +464,9 @@ late_per_day  <- burst |> filter(late_release)  |> pull(median_hours_per_day)
 early_per_day <- burst |> filter(!late_release) |> pull(median_hours_per_day)
 ```
 
+
 ```{r}
-#| label: memo-table sub_missing(missing_text = "—") |>
+#| label: memo-table
 memo_trends |>
   select(period, show_share, global_share, new_share, top10_share,
          gini_views) |>
@@ -480,9 +479,11 @@ memo_trends |>
              gini_views   = "Gini (Views)") |>
   fmt_percent(c(show_share, global_share, new_share, top10_share),
               decimals = 1) |>
-    fmt_number(gini_views, decimals = 2) |>
+  fmt_number(gini_views, decimals = 2) |>
+  sub_missing(missing_text = "—") |>
   tab_header(title = "Key Viewership Indicators by Period") |>
   tab_source_note(NETFLIX_SOURCE)
+```
 ```
 
 ```{r}
@@ -522,7 +523,7 @@ memo_trends |>
 **From:** Sean Bosch
 **Re:** 2027 Original Content Strategy
 
- (**Bottom line:** For 2027, Netflix should spend its original content budget on a wide range of solid shows with global appeal, time big releases carefully, and treat live events as a small add-on instead of a main focus. The viewing data from `r first_p$period` to `r last_p$period` supports each of these.
+ **Bottom line:** For 2027, Netflix should spend its original content budget on a wide range of solid shows with global appeal, time big releases carefully, and treat live events as a small add-on instead of a main focus. The viewing data from `r first_p$period` to `r last_p$period` supports each of these.
 
 ### Big hits vs. the long tail
 
@@ -563,6 +564,6 @@ Live events are still a very small part of Netflix. Their share of watch time we
 - **Quarto** to write and render this report.
 - **R packages:** dplyr and tidyr to clean and reshape the data, gt to build the tables, ggplot2 to make the chart, and scales to format the numbers and percentages.
 - **Data:** Netflix's *What We Watched* engagement reports, 2023H1–2026H1.
-- **Claude (Anthropic):** I used Claude to help write some code and draft some strategies for the writing portions. I checked the numbers against my own tables and edited the writing myself.):** 
+- **Claude (Anthropic):** I used Claude to help write some code and draft some strategies for the writing portions. I checked the numbers against my own tables and edited the writing myself. 
 
 :::
